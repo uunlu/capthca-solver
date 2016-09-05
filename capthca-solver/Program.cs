@@ -12,31 +12,60 @@ namespace capthca_solver
     {
         static void Main(string[] args)
         {
-            float[][] array2D = new float[][]
-            { new float[]{ 1, 2 },
-              new float[]{ 3, 4 },
-              new float[]{ 5, 6 },
-              new float[]{ 7, 8 } };
-
-            //var matrix = new Matrix(array2D);
-
-            //Console.WriteLine(matrix);
-            //Console.WriteLine(MatrixUtilities.Transpose(matrix));
-
-            Matrix<double> matrix = DenseMatrix.OfArray(new double[,] {
-                {1,1,1,1},
-                {1,2,3,4},
-                {4,3,2,1}
+            Matrix<double> input = DenseMatrix.OfArray(new double[,] {
+                {0,0,1},
+                {0,1,1},
+                {1,0,1},
+                {1,1,1}
             });
 
-            Console.WriteLine(matrix);
-            Console.WriteLine(matrix.Transpose());
+            Matrix<double> output = DenseMatrix.OfArray(new double[,] {
+                {0,0,1,1}
+            }).Transpose();
 
-            var matrix2 = matrix.Multiply(2);
-            Console.WriteLine(matrix2);
+            var m = CreateRandomMatrix(3, 1);
+            var syn0 = 2 * m - 1;
 
-            var matrix2matrix = matrix.Multiply(matrix.Transpose());
-            Console.WriteLine(matrix2matrix);
+            Train(input, output, syn0, trainCount);
+
+            //Console.WriteLine(m);
+            Console.WriteLine(syn0);
+            Console.ReadKey();
+        }
+
+        private static void Train(Matrix<double> input, Matrix<double> output, Matrix<double> syn0, int trainCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Matrix<double> CreateRandomMatrix(int x, int y)
+        {
+
+            var dblArray = new double[x][];
+            var rnd = new Random(DateTime.Now.Millisecond);
+
+            for (int i = 0; i < x; i++)
+            {
+                dblArray[i] = new double[y];
+                for (int j = 0; j < y; j++)
+                {
+                    dblArray[i][j] = rnd.NextDouble();
+                }
+            }
+
+            return DenseMatrix.OfColumnArrays(dblArray);
+        }
+
+        public static Matrix<double> Sigmoid(Matrix<double> m, bool deriv = false)
+        {
+            if (deriv)
+            {
+                return (1 - m);
+            }
+
+            return 1 / (1 + (-m).PointwiseExp());
         }
     }
+
+
 }
